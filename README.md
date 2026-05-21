@@ -2,6 +2,8 @@
 
 `stream_hub` 前端插件负责消费后端流式事件中心。业务页面只需要定义 stream schema，然后通过 composable 订阅事件；页面不需要手写 Socket.IO 事件名、room 名或订阅引用计数。
 
+插件的核心能力是 stream schema、订阅 composable、共享 room 管理和日志 append 合并。日志控制台页面只是一个内置示例页面，用来演示如何消费后端日志文件 API、tail、follow 和下载能力；业务系统可以直接复用这个页面，也可以不注册页面，只使用插件提供的底层能力。
+
 前端插件仓库：
 
 ```text
@@ -34,6 +36,18 @@ import {
 import { getLogFilesApi } from '#/plugins/stream_hub/api';
 import { useStreamHubFileLogFollow } from '#/plugins/stream_hub/composables/stream-hub-file-log';
 ```
+
+## 推荐接入流程
+
+业务页面接入时建议按下面的顺序实现：
+
+1. 在业务模块里用 `defineStreamHubStream` 或 `defineStreamHubLogStream` 定义 schema。
+2. 在页面、抽屉或列表组件中调用 `useStreamHubStream` / `useStreamHubLogStream`。
+3. 在进入页面或切换资源时 `subscribe()`，在离开页面、关闭抽屉或切换资源前调用 `handle.stop()`。
+4. 多个组件共享同一个 room 时，用 `createStreamHubRoomRegistry` 做引用计数。
+5. 只需要查看 `backend/log` 文件时，再使用日志控制台页面或 `stream-hub-file-log` composable。
+
+除非业务确实要展示服务器日志文件，否则不需要接入日志控制台页面。
 
 ## 普通事件流
 
@@ -181,6 +195,8 @@ const handle = await logClient.subscribe(traceId, {
 ```text
 stream_hub:log:view
 ```
+
+这个页面的定位是示例演示和轻量运维工具，不是 `stream_hub` 插件的核心使用方式。它展示了如何把日志文件列表、tail、follow、过滤和下载组合成一个页面；业务模块接入普通事件流或业务日志流时，不需要依赖这个页面，也不需要把业务日志强行落到 `backend/log` 文件后再读取。
 
 页面能力：
 

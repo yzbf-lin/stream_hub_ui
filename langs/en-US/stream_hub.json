@@ -1,0 +1,13 @@
+{
+  "download": "Download",
+  "empty_files": "No log files",
+  "follow": "Follow",
+  "keyword_placeholder": "Filter keyword",
+  "load_files_failed": "Failed to load log files",
+  "log_console_menu": "Live Logs",
+  "no_file_selected": "Select a log file",
+  "refresh": "Refresh",
+  "search_placeholder": "Search files",
+  "stop_follow": "Stop",
+  "tail": "Read Tail"
+}

@@ -1,0 +1,7 @@
+[plugin]
+name = 'stream_hub'
+summary = '流式事件中心'
+version = '0.0.1'
+description = '统一事件通道、日志 tail 与日志文件查看页'
+author = 'pd-qa-backend'
+tags = ['monitor', 'stream']
